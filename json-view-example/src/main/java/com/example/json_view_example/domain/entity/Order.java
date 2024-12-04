@@ -1,7 +1,11 @@
 package com.example.json_view_example.domain.entity;
 
 import com.example.json_view_example.domain.entity.enums.OrderStatus;
+import com.example.json_view_example.view.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -31,8 +35,14 @@ public class Order {
     private Long id;
 
     @Builder.Default
+    @JsonView(Views.UserSummary.class)
     private List<String> products = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @JsonView(Views.UserSummary.class)
     private OrderStatus status;
+
+    @JsonView(Views.UserSummary.class)
     private BigDecimal cost;
 
     @ManyToOne
