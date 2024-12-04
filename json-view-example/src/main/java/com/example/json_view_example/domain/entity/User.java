@@ -29,7 +29,7 @@ public class User {
     private Long id;
 
     @JsonView(Views.UserDetails.class)
-    private String name;
+    private String username;
 
     @JsonView(Views.UserDetails.class)
     private String email;
