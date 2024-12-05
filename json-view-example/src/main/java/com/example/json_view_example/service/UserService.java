@@ -36,8 +36,8 @@ public class UserService {
     }
 
     public SuccessResponse update(Long id, UpsertUserRequest request) {
-        isExistedEmail(request.getEmail());
         User existedUser = getUser(id);
+        isExistedEmail(request.getEmail());
         UserMapper.INSTANCE.updateUserFromDto(request, existedUser);
         userRepository.save(existedUser);
         return SuccessResponse.builder().build();

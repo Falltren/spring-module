@@ -23,9 +23,9 @@ import java.util.stream.Stream;
 
 import static com.example.json_view_example.TestConstant.COMMON_USER_PATH;
 import static com.example.json_view_example.TestConstant.CORRECT_REQUEST;
-import static com.example.json_view_example.TestConstant.EMAIL;
+import static com.example.json_view_example.TestConstant.FIRST_EMAIL;
 import static com.example.json_view_example.TestConstant.SUCCESS_RESPONSE;
-import static com.example.json_view_example.TestConstant.USERNAME;
+import static com.example.json_view_example.TestConstant.FIRST_USERNAME;
 import static com.example.json_view_example.TestConstant.USER_PATH_WITH_ID;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -66,7 +66,7 @@ class UserControllerTest {
     @MethodSource("provideEmailAndExpectedStatus")
     void whenCreateUserWithIncorrectEmail_thenReturnBadRequest(String email, String message) throws Exception {
         UpsertUserRequest request = UpsertUserRequest.builder()
-                .username(USERNAME)
+                .username(FIRST_USERNAME)
                 .email(email)
                 .build();
 
@@ -91,7 +91,7 @@ class UserControllerTest {
     void whenCreateUserWithIncorrectName_thenReturnBadRequest(String username, int expectedStatus) throws Exception {
         UpsertUserRequest request = UpsertUserRequest.builder()
                 .username(username)
-                .email(EMAIL)
+                .email(FIRST_EMAIL)
                 .build();
 
         mockMvc.perform(post(COMMON_USER_PATH)
@@ -114,8 +114,8 @@ class UserControllerTest {
     @DisplayName("Creating a user with a usable email")
     void whenCreateUserWithExistedEmail_thenReturnBadRequest() throws Exception {
         UpsertUserRequest request = UpsertUserRequest.builder()
-                .username(USERNAME)
-                .email(EMAIL)
+                .username(FIRST_USERNAME)
+                .email(FIRST_EMAIL)
                 .build();
         when(userService.create(request)).thenThrow(AlreadyExistException.class);
 
@@ -197,8 +197,8 @@ class UserControllerTest {
         mockMvc.perform(get(COMMON_USER_PATH))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].username").value(USERNAME))
-                .andExpect(jsonPath("$[0].email").value(EMAIL))
+                .andExpect(jsonPath("$[0].username").value(FIRST_USERNAME))
+                .andExpect(jsonPath("$[0].email").value(FIRST_EMAIL))
                 .andExpect(jsonPath("$[0].orders").doesNotExist());
     }
 
@@ -209,8 +209,8 @@ class UserControllerTest {
                 .cost("500")
                 .build();
         return UserResponse.builder()
-                .username(USERNAME)
-                .email(EMAIL)
+                .username(FIRST_USERNAME)
+                .email(FIRST_EMAIL)
                 .orders(List.of(orderResponse))
                 .build();
     }
