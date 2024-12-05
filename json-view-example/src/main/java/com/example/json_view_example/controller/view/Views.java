@@ -1,4 +1,4 @@
-package com.example.json_view_example.view;
+package com.example.json_view_example.controller.view;
 
 public class Views {
 

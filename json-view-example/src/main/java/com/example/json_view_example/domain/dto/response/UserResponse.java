@@ -1,6 +1,6 @@
 package com.example.json_view_example.domain.dto.response;
 
-import com.example.json_view_example.view.Views;
+import com.example.json_view_example.controller.view.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

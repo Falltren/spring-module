@@ -1,8 +1,6 @@
 package com.example.json_view_example.domain.entity;
 
 import com.example.json_view_example.domain.entity.enums.OrderStatus;
-import com.example.json_view_example.view.Views;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

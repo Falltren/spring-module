@@ -4,7 +4,7 @@ import com.example.json_view_example.domain.dto.request.UpsertUserRequest;
 import com.example.json_view_example.domain.dto.response.SuccessResponse;
 import com.example.json_view_example.domain.dto.response.UserResponse;
 import com.example.json_view_example.service.UserService;
-import com.example.json_view_example.view.Views;
+import com.example.json_view_example.controller.view.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
