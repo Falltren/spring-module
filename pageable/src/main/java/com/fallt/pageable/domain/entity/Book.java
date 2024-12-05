@@ -1,7 +1,10 @@
 package com.fallt.pageable.domain.entity;
 
 import com.fallt.pageable.domain.entity.enums.Genre;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +26,11 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+
+    @Column(name = "publication_date")
     private LocalDate publicationDate;
+
+    @Enumerated(EnumType.STRING)
     private Genre genre;
 
     @ManyToOne
