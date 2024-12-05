@@ -2,6 +2,7 @@ package com.example.json_view_example.service;
 
 import com.example.json_view_example.domain.dto.request.UpsertOrderRequest;
 import com.example.json_view_example.domain.dto.response.OrderResponse;
+import com.example.json_view_example.domain.dto.response.SuccessResponse;
 import com.example.json_view_example.domain.entity.Order;
 import com.example.json_view_example.domain.entity.User;
 import com.example.json_view_example.exception.EntityNotFoundException;
@@ -23,11 +24,12 @@ public class OrderService {
         return getOrder(id);
     }
 
-    public OrderResponse create(UpsertOrderRequest request) {
-        User user = userService.getUserById(request.getUserId());
+    public SuccessResponse create(UpsertOrderRequest request) {
+        User user = userService.getUser(request.getUserId());
         Order order = OrderMapper.INSTANCE.toEntity(request);
         order.setUser(user);
-        return OrderMapper.INSTANCE.toResponse(orderRepository.save(order));
+        orderRepository.save(order);
+        return SuccessResponse.builder().build();
     }
 
     private Order getOrder(Long id) {

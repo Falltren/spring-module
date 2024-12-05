@@ -1,7 +1,10 @@
 package com.example.json_view_example.service;
 
 import com.example.json_view_example.domain.dto.request.UpsertUserRequest;
+import com.example.json_view_example.domain.dto.response.SuccessResponse;
+import com.example.json_view_example.domain.dto.response.UserResponse;
 import com.example.json_view_example.domain.entity.User;
+import com.example.json_view_example.exception.AlreadyExistException;
 import com.example.json_view_example.exception.EntityNotFoundException;
 import com.example.json_view_example.mapper.UserMapper;
 import com.example.json_view_example.repository.UserRepository;
@@ -17,31 +20,42 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserResponse> getAll() {
+        return UserMapper.INSTANCE.toListResponse(userRepository.findAll());
     }
 
-    public User getUserById(Long id) {
-        return getUser(id);
+    public UserResponse getUserById(Long id) {
+        return UserMapper.INSTANCE.toResponse(getUser(id));
     }
 
-    public User create(UpsertUserRequest request) {
+    public SuccessResponse create(UpsertUserRequest request) {
+        isExistedEmail(request.getEmail());
         User user = UserMapper.INSTANCE.toEntity(request);
-        return userRepository.save(user);
+        userRepository.save(user);
+        return SuccessResponse.builder().build();
     }
 
-    public User update(Long id, UpsertUserRequest request) {
+    public SuccessResponse update(Long id, UpsertUserRequest request) {
+        isExistedEmail(request.getEmail());
         User existedUser = getUser(id);
         UserMapper.INSTANCE.updateUserFromDto(request, existedUser);
-        return userRepository.save(existedUser);
+        userRepository.save(existedUser);
+        return SuccessResponse.builder().build();
     }
 
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
 
-    private User getUser(Long id) {
+    public User getUser(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(MessageFormat.format("User with ID: {0} not found", id)));
     }
+
+    private void isExistedEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new AlreadyExistException(MessageFormat.format("User with email: {0} already exists", email));
+        }
+    }
+
 }

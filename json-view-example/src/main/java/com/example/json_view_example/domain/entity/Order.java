@@ -13,9 +13,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,18 +37,16 @@ public class Order {
     private Long id;
 
     @Builder.Default
-    @JsonView(Views.UserSummary.class)
     private List<String> products = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    @JsonView(Views.UserSummary.class)
     private OrderStatus status;
-
-    @JsonView(Views.UserSummary.class)
     private BigDecimal cost;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private User user;
 
 }

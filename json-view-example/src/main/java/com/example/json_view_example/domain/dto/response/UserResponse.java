@@ -7,23 +7,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderResponse {
+public class UserResponse {
 
-    @Builder.Default
-    @JsonView(Views.UserSummary.class)
-    private List<String> products = new ArrayList<>();
+    @JsonView(Views.UserDetails.class)
+    private String username;
+
+    @JsonView(Views.UserDetails.class)
+    private String email;
 
     @JsonView(Views.UserSummary.class)
-    private String status;
-
-    @JsonView(Views.UserSummary.class)
-    private String cost;
+    private List<OrderResponse> orders;
 
 }
