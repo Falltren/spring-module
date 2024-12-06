@@ -20,5 +20,4 @@ public class BookResponse {
 
     @JsonProperty("publication_date")
     private LocalDate publicationDate;
-
 }

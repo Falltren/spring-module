@@ -22,7 +22,7 @@ public interface BookMapper {
     @Mapping(target = "publicationDate", expression = "java(java.time.LocalDate.parse(request.getPublicationDate()))")
     Book toEntity(UpsertBookRequest request);
 
-    @Mapping(target = "author", expression = "java(book.getAuthor().getFirstName() + \" \" + book.getAuthor().getLastName())")
+    @Mapping(target = "author", expression = "java(book.getAuthor().getLastName() != null ? book.getAuthor().getFirstName() + \" \" + book.getAuthor().getLastName() : book.getAuthor().getFirstName())")
     BookResponse toResponse(Book book);
 
     List<BookResponse> toListDto(List<Book> books);
