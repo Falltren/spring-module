@@ -1,12 +1,12 @@
 package com.fallt.pageable.domain.dto.request;
 
+import com.fallt.pageable.domain.entity.enums.Genre;
+import com.fallt.pageable.validation.GenreValidation;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -16,8 +16,10 @@ public class UpsertBookRequest {
 
     private String title;
 
-    @JsonAlias("published_date")
-    private LocalDate publishedDate;
+    @JsonAlias("publication_date")
+    private String publicationDate;
+
+    @GenreValidation(enumClass = Genre.class)
     private String genre;
 
     @JsonAlias("author_id")

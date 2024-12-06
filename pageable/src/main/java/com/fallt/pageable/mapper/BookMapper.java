@@ -19,6 +19,7 @@ public interface BookMapper {
     BookMapper INSTANCE = getMapper(BookMapper.class);
 
     @Mapping(target = "genre", expression = "java(com.fallt.pageable.domain.entity.enums.Genre.valueOf(request.getGenre()))")
+    @Mapping(target = "publicationDate", expression = "java(java.time.LocalDate.parse(request.getPublicationDate()))")
     Book toEntity(UpsertBookRequest request);
 
     @Mapping(target = "author", expression = "java(book.getAuthor().getFirstName() + \" \" + book.getAuthor().getLastName())")

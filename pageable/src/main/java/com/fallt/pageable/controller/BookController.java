@@ -5,6 +5,7 @@ import com.fallt.pageable.domain.dto.request.UpsertBookRequest;
 import com.fallt.pageable.domain.dto.response.BookResponse;
 import com.fallt.pageable.domain.dto.response.SuccessResponse;
 import com.fallt.pageable.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
 public class BookController {
 
@@ -41,7 +42,7 @@ public class BookController {
     }
 
     @PostMapping
-    public SuccessResponse create(@RequestBody UpsertBookRequest request){
+    public SuccessResponse create(@RequestBody @Valid UpsertBookRequest request){
         return bookService.create(request);
     }
 

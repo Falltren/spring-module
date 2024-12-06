@@ -32,15 +32,15 @@ public interface BookSpecification {
             String[] parts = author.split(" ");
             String firstName = parts[0];
             if (parts.length == 1) {
-                return criteriaBuilder.equal(root.get("author").get("first_name"), firstName);
+                return criteriaBuilder.equal(root.get("author").get("firstName"), firstName);
             }
             if (parts.length != 2) {
                 return null;
             }
             String lastName = parts[1];
             return criteriaBuilder.and(
-                    criteriaBuilder.equal(root.get("author").get("first_name"), firstName),
-                    criteriaBuilder.equal(root.get("author").get("last_name"), lastName)
+                    criteriaBuilder.equal(root.get("author").get("firstName"), firstName),
+                    criteriaBuilder.equal(root.get("author").get("lastName"), lastName)
             );
         });
     }
@@ -50,7 +50,7 @@ public interface BookSpecification {
             if (from == null) {
                 return null;
             }
-            return criteriaBuilder.greaterThanOrEqualTo(root.get("publication_date"), from);
+            return criteriaBuilder.greaterThanOrEqualTo(root.get("publicationDate"), from);
         });
     }
 
@@ -59,7 +59,7 @@ public interface BookSpecification {
             if (to == null) {
                 return null;
             }
-            return criteriaBuilder.lessThanOrEqualTo(root.get("publication_date"), to);
+            return criteriaBuilder.lessThanOrEqualTo(root.get("publicationDate"), to);
         });
     }
 }
