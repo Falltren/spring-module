@@ -12,6 +12,7 @@ import com.fallt.pageable.repository.BookRepository;
 import com.fallt.pageable.repository.specification.BookSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -48,8 +49,8 @@ public class BookService {
         return BookMapper.INSTANCE.toResponse(book);
     }
 
-    public List<BookResponse> getAll(Integer offset, Integer limit) {
-        return BookMapper.INSTANCE.toListDto(bookRepository.findAll(PageRequest.of(offset, limit)).getContent());
+    public List<BookResponse> getAll(Pageable pageable) {
+        return BookMapper.INSTANCE.toListDto(bookRepository.findAll(pageable).getContent());
     }
 
     public List<BookResponse> filterBy(BookFilter bookFilter){

@@ -1,5 +1,6 @@
 package com.fallt.pageable;
 
+import com.fallt.pageable.domain.dto.request.UpsertBookRequest;
 import com.fallt.pageable.domain.dto.response.BookResponse;
 
 import java.time.LocalDate;
@@ -8,6 +9,12 @@ public final class TestConstant {
 
     public static final String BOOK_PATH = "/api/v1/books";
     public static final String BOOK_PATH_WITH_ID = "/api/v1/books/{id}";
+    public static final UpsertBookRequest BOOK_REQUEST = UpsertBookRequest.builder()
+            .title("New book")
+            .genre("ROMANCE")
+            .publicationDate("2001-08-19")
+            .authorId(100L)
+            .build();
     public static final BookResponse FIRST_BOOK_RESPONSE = BookResponse.builder()
             .title("Title1")
             .genre("ROMANCE")

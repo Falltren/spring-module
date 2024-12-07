@@ -1,7 +1,7 @@
 package com.fallt.pageable.controller;
 
-import com.fallt.pageable.domain.dto.request.UpsertBookRequest;
 import com.fallt.pageable.domain.dto.response.BookResponse;
+import com.fallt.pageable.repository.BookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,11 +21,14 @@ import java.util.stream.Stream;
 
 import static com.fallt.pageable.TestConstant.BOOK_PATH;
 import static com.fallt.pageable.TestConstant.BOOK_PATH_WITH_ID;
+import static com.fallt.pageable.TestConstant.BOOK_REQUEST;
 import static com.fallt.pageable.TestConstant.FIFTH_BOOK_RESPONSE;
 import static com.fallt.pageable.TestConstant.FIRST_BOOK_RESPONSE;
 import static com.fallt.pageable.TestConstant.FOURTH_BOOK_RESPONSE;
 import static com.fallt.pageable.TestConstant.SECOND_BOOK_RESPONSE;
 import static com.fallt.pageable.TestConstant.THIRD_BOOK_RESPONSE;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -47,14 +50,15 @@ class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private BookRepository bookRepository;
+
     @Test
     @DisplayName("Create book")
     void whenCreateBook_thenReturnSuccessResponse() throws Exception {
-        UpsertBookRequest request = createRequest();
-
         mockMvc.perform(post(BOOK_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(BOOK_REQUEST)))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
@@ -62,25 +66,23 @@ class BookControllerTest {
     @Test
     @DisplayName("Update book")
     void whenUpdateBook_thenReturnSuccessResponse() throws Exception {
-        UpsertBookRequest request = createRequest();
         Long id = 100L;
 
         mockMvc.perform(put(BOOK_PATH_WITH_ID, id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(BOOK_REQUEST)))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Update book by incorrect id")
-    void whenUpdateBookByIncorrectId_thenReturnNotFound() throws Exception{
-        UpsertBookRequest request = createRequest();
+    void whenUpdateBookByIncorrectId_thenReturnNotFound() throws Exception {
         Long id = 500L;
 
         mockMvc.perform(put(BOOK_PATH_WITH_ID, id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(BOOK_REQUEST)))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Book with ID: " + id + " not found"));
@@ -101,7 +103,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Get book by incorrect id")
-    void whenGetByIncorrectId_thenReturnNotFound() throws Exception{
+    void whenGetByIncorrectId_thenReturnNotFound() throws Exception {
         Long id = 500L;
 
         mockMvc.perform(get(BOOK_PATH_WITH_ID, id))
@@ -115,7 +117,7 @@ class BookControllerTest {
     @MethodSource("providedOffsetWithLimitAndExpectedResponse")
     void whenGetAllByDefault_thenReturnListBooksWith5Items(Integer offset, Integer limit, List<BookResponse> expected) throws Exception {
 
-        mockMvc.perform(get(BOOK_PATH + "?offset=" + offset + "&limit=" + limit))
+        mockMvc.perform(get(BOOK_PATH + "?page=" + offset + "&size=" + limit))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -144,12 +146,50 @@ class BookControllerTest {
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 
-    private UpsertBookRequest createRequest() {
-        return UpsertBookRequest.builder()
-                .title("New book")
-                .genre("ROMANCE")
-                .publicationDate("2001-08-19")
-                .authorId(100L)
-                .build();
+    @Test
+    @DisplayName("Delete book")
+    void whenDelete_thenBookDeleteFromDatabase() throws Exception {
+        Long id = 100L;
+        mockMvc.perform(delete(BOOK_PATH_WITH_ID, id))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        assertFalse(bookRepository.existsById(id));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Get books by filter")
+    @MethodSource("providedBookFilterAndExpectedResponse")
+    void whenGetBookByFilter_thenReturnFilteredList(int offset, int limit, String genre, String author, String from, String to, List<BookResponse> expected) throws Exception {
+        mockMvc.perform(get(BOOK_PATH + "/filter")
+                        .param("offset", String.valueOf(offset))
+                        .param("limit", String.valueOf(limit))
+                        .param("genre", genre)
+                        .param("author", author)
+                        .param("from", from)
+                        .param("to", to))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+    }
+
+    private static Stream<Arguments> providedBookFilterAndExpectedResponse() {
+        return Stream.of(
+                Arguments.of(0, 3, "ROMANCE", null, null, null, List.of(FIRST_BOOK_RESPONSE, THIRD_BOOK_RESPONSE)
+                ),
+                Arguments.of(0, 3, "ROMANCE", null, null, null, List.of(FIRST_BOOK_RESPONSE, THIRD_BOOK_RESPONSE)
+                ),
+                Arguments.of(0, 5, null, "John Doe", null, null, List.of(FIRST_BOOK_RESPONSE, SECOND_BOOK_RESPONSE, THIRD_BOOK_RESPONSE)
+                ),
+                Arguments.of(0, 5, null, null, "1991-01-01", "1996-01-01",
+                        List.of(SECOND_BOOK_RESPONSE, THIRD_BOOK_RESPONSE, FOURTH_BOOK_RESPONSE)
+                ),
+                Arguments.of(0, 5, null, null, null, "1994-01-01",
+                        List.of(FIRST_BOOK_RESPONSE, SECOND_BOOK_RESPONSE, THIRD_BOOK_RESPONSE)
+                ),
+                Arguments.of(0, 5, null, null, "1994-01-01", null,
+                        List.of(FOURTH_BOOK_RESPONSE, FIFTH_BOOK_RESPONSE)
+                )
+        );
     }
 }
