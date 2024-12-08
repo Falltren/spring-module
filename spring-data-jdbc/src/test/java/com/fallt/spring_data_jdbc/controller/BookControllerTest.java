@@ -14,7 +14,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.fallt.spring_data_jdbc.TestConstant.COMMON_BOOK_PATH;
 import static com.fallt.spring_data_jdbc.TestConstant.FIRST_BOOK_RESPONSE;
@@ -118,7 +117,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Delete book")
-    void whenDelete_thenRemoveBookFromDatabase() throws Exception{
+    void whenDelete_thenRemoveBookFromDatabase() throws Exception {
         Long id = 100L;
 
         mockMvc.perform(delete(ID_PATH, id))
