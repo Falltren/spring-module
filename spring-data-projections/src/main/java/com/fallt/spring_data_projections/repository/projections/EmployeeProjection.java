@@ -1,4 +1,4 @@
-package com.fallt.spring_data_projections.repository;
+package com.fallt.spring_data_projections.repository.projections;
 
 import org.springframework.beans.factory.annotation.Value;
 
