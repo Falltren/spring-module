@@ -1,8 +1,6 @@
 package com.fallt.spring_data_projections.mapper;
 
-import com.fallt.spring_data_projections.domain.dto.request.UpsertDepartmentRequest;
 import com.fallt.spring_data_projections.domain.dto.request.UpsertEmployeeRequest;
-import com.fallt.spring_data_projections.domain.entity.Department;
 import com.fallt.spring_data_projections.domain.entity.Employee;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
