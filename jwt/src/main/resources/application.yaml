@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/app_db
+    username: postgres_user
+    password: postgres_password
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: on
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+
+app:
+  security:
+    jwt:
+      secret: someSecretKey
+      tokenExpiration: 5m
+      refreshTokenExpiration: 30m
+    matchers: ${APP_SECURITY_MATCHERS:/api/v1/users/create,/api/v1/auth/login,/api/v1/auth/refresh-token}
