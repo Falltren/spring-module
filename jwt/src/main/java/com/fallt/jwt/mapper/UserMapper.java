@@ -16,6 +16,7 @@ public interface UserMapper {
 
     UserMapper INSTANCE = getMapper(UserMapper.class);
 
+    @Mapping(target = "role", expression = "java(com.fallt.jwt.domain.entity.enums.Role.USER)")
     User toEntity(UpsertUserRequest request);
 
     UserResponse toResponse(User user);
