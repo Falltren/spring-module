@@ -7,12 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class AuthResponse {
-
-    private String username;
+public class RefreshTokenResponse {
 
     @JsonProperty("access_token")
     private String accessToken;
