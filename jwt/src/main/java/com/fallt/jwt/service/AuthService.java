@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -34,7 +36,7 @@ public class AuthService {
         AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
         return AuthResponse.builder()
-                .refreshToken(jwtUtils.generateJwtToken(userDetails))
+                .accessToken(jwtUtils.generateJwtToken(userDetails))
                 .refreshToken(refreshToken.getToken())
                 .username(userDetails.getUsername())
                 .build();
@@ -57,7 +59,8 @@ public class AuthService {
         var currentPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (currentPrincipal instanceof AppUserDetails userDetails) {
             Long userId = userDetails.getId();
-            refreshTokenService.deleteByUserId(userId);
+            RefreshToken refreshToken = refreshTokenService.getRefreshTokenByUserId(userId);
+            refreshTokenService.deleteByUserId(refreshToken);
         }
     }
 }

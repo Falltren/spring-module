@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @RedisHash("refresh_tokens")
@@ -15,7 +16,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RefreshToken {
+public class RefreshToken implements Serializable {
 
     @Id
     @Indexed
@@ -29,5 +30,4 @@ public class RefreshToken {
 
     @Indexed
     private Instant expiryDate;
-
 }

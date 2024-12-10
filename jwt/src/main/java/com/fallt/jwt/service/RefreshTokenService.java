@@ -1,6 +1,7 @@
 package com.fallt.jwt.service;
 
 import com.fallt.jwt.domain.entity.RefreshToken;
+import com.fallt.jwt.exception.EntityNotFoundException;
 import com.fallt.jwt.exception.RefreshTokenException;
 import com.fallt.jwt.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class RefreshTokenService {
                 .token(UUID.randomUUID().toString())
                 .build();
         refreshToken = refreshTokenRepository.save(refreshToken);
+        System.out.println(refreshToken.getId());
         return refreshToken;
     }
 
@@ -43,7 +45,13 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
-    public void deleteByUserId(Long userId) {
-        refreshTokenRepository.deleteByUserId(userId);
+    public void deleteByUserId(RefreshToken refreshToken) {
+        refreshTokenRepository.delete(refreshToken);
+    }
+
+    public RefreshToken getRefreshTokenByUserId(Long id){
+        return refreshTokenRepository.findByUserId(id).orElseThrow(
+                () -> new RefreshTokenException("Refresh token by userId: " + id + " not found")
+        );
     }
 }
