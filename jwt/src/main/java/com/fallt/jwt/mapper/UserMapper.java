@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
+import java.util.List;
+
 import static org.mapstruct.factory.Mappers.getMapper;
 
 @Mapper(componentModel = "spring")
@@ -20,6 +22,8 @@ public interface UserMapper {
     User toEntity(UpsertUserRequest request);
 
     UserResponse toResponse(User user);
+
+    List<UserResponse> toListResponse(List<User> users);
 
     @Mapping(target = "id", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

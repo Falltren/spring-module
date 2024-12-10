@@ -10,8 +10,10 @@ import com.fallt.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +28,10 @@ public class UserService {
         return UserMapper.INSTANCE.toResponse(user);
     }
 
+    public List<UserResponse> getAll() {
+        return UserMapper.INSTANCE.toListResponse(userRepository.findAll());
+    }
+
     public UserResponse createUser(UpsertUserRequest request) {
         checkExistingUser(request.getUsername());
         User user = UserMapper.INSTANCE.toEntity(request);
@@ -33,6 +39,7 @@ public class UserService {
         return UserMapper.INSTANCE.toResponse(userRepository.save(user));
     }
 
+    @Transactional
     public UserResponse updateUser(Long id, UpsertUserRequest request) {
         if (request.getUsername() != null) {
             checkExistingUser(request.getUsername());
@@ -44,6 +51,19 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void unlock(Long id){
+        User user = getUser(id);
+        user.setAccountNonLocked(true);
+        userRepository.save(user);
+    }
+
+    public void block(Long id){
+        User user = getUser(id);
+        user.setAccountNonLocked(false);
+        userRepository.save(user);
     }
 
     private User getUser(Long id) {
