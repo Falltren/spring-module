@@ -14,12 +14,16 @@ public class AppUserDetails implements UserDetails {
 
     private final User user;
 
+    public User getUser() {
+        return user;
+    }
+
     public Long getId() {
         return user.getId();
     }
 
-    public boolean getNonLockStatus(){
-        return user.isAccountNonLocked();
+    public void setBlockingStatus() {
+        user.setAccountNonLocked(false);
     }
 
     @Override
@@ -56,5 +60,4 @@ public class AppUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

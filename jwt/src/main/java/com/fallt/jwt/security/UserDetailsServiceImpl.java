@@ -23,5 +23,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format("User with name: {0} not found", username)));
         return new AppUserDetails(user);
     }
-
 }

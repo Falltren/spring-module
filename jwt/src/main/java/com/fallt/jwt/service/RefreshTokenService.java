@@ -33,7 +33,6 @@ public class RefreshTokenService {
                 .token(UUID.randomUUID().toString())
                 .build();
         refreshToken = refreshTokenRepository.save(refreshToken);
-        System.out.println(refreshToken.getId());
         return refreshToken;
     }
 

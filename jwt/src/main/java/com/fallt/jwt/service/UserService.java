@@ -54,14 +54,19 @@ public class UserService {
     }
 
     @Transactional
-    public void unlock(Long id){
+    public void unlock(Long id) {
         User user = getUser(id);
         user.setAccountNonLocked(true);
         userRepository.save(user);
     }
 
-    public void block(Long id){
+    @Transactional
+    public void lockUser(Long id) {
         User user = getUser(id);
+        block(user);
+    }
+
+    public void block(User user) {
         user.setAccountNonLocked(false);
         userRepository.save(user);
     }

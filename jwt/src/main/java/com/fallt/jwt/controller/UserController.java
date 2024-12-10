@@ -62,6 +62,6 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('MODERATOR', 'SUPER_ADMIN')")
     @PutMapping("/block/{id}")
     public void blockUser(@PathVariable Long id) {
-        userService.block(id);
+        userService.lockUser(id);
     }
 }
