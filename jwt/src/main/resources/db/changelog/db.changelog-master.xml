@@ -8,5 +8,8 @@
     <changeSet id="1" author="fallt">
         <sqlFile path="sql/schema.sql" relativeToChangelogFile="true"/>
     </changeSet>
+    <changeSet id="2" author="fallt">
+        <sqlFile path="sql/add-auditlog-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
 
 </databaseChangeLog>

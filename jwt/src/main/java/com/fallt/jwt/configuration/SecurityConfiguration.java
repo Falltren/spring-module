@@ -1,5 +1,6 @@
 package com.fallt.jwt.configuration;
 
+import com.fallt.jwt.logging.LoggingFilter;
 import com.fallt.jwt.security.UserDetailsServiceImpl;
 import com.fallt.jwt.security.jwt.JwtAuthenticationEntryPoint;
 import com.fallt.jwt.security.jwt.JwtTokenFilter;
@@ -18,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -28,6 +30,7 @@ public class SecurityConfiguration {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtTokenFilter jwtTokenFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final LoggingFilter loggingFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -58,7 +61,8 @@ public class SecurityConfiguration {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(loggingFilter, ExceptionTranslationFilter.class);
         return http.build();
     }
 }

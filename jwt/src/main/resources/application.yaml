@@ -4,8 +4,6 @@ server:
     key-store: classpath:myapp.jks
     key-store-password: password
     key-alias: myapp
-#  http:
-#    port: 8080
 
 spring:
   datasource:
