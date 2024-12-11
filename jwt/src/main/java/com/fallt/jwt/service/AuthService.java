@@ -49,7 +49,7 @@ public class AuthService {
                     User tokenOwner = userRepository.findById(userId).orElseThrow(() ->
                             new RefreshTokenException("Exception trying to get token for userId: " + userId));
                     String token = jwtUtils.generateJwtTokenFromUsername(tokenOwner.getUsername());
-                    return new RefreshTokenResponse(token, request.getRefreshToken());
+                    return new RefreshTokenResponse(token, refreshTokenService.createRefreshToken(userId).getToken());
                 }).orElseThrow(() -> new RefreshTokenException(requestRefreshToken, "Refresh token not found"));
     }
 
