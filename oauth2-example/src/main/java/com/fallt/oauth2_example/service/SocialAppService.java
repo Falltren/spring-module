@@ -48,8 +48,7 @@ public class SocialAppService implements OAuth2UserService<OAuth2UserRequest, OA
                             .collect(Collectors.toSet()));
                     return newUser;
                 });
-        User savedUser = userRepository.save(user);
-        System.out.println(savedUser);
+        userRepository.save(user);
         return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "email");
     }
 }
