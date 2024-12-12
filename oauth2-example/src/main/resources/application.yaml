@@ -7,8 +7,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 212723010132-ii7hbqov40direv4hqp1a0b2gap2h0i3.apps.googleusercontent.com
-            client-secret: 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
+            client-id:
+            client-secret:
             scope: profile, email
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
 
