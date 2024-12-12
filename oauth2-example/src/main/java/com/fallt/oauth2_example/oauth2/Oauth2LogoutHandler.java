@@ -15,11 +15,10 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class Oauth2LogoutHandler implements LogoutHandler {
 
-    //    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
     private final OAuth2AuthorizedClientService authorizedClientService;
 
     private static final String GOOGLE_TOKEN_REVOKE_PATH = "https://oauth2.googleapis.com/revoke?token=";
-
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -40,7 +39,6 @@ public class Oauth2LogoutHandler implements LogoutHandler {
 
     private void revokeToken(String accessToken) {
         String revokePath = GOOGLE_TOKEN_REVOKE_PATH + accessToken;
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.postForObject(revokePath, null, String.class);
     }
 }
